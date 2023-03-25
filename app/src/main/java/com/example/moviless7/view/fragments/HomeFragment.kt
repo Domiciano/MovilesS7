@@ -55,7 +55,7 @@ class HomeFragment : Fragment()
         binding.profileDescription.text = user?.description
         binding.profileFollowers.text = user?.followers.toString()
         binding.profileFollowing.text = user?.following.toString()
-        binding.profileImage.setImageResource(R.drawable.face3)
+        binding.profileImage.setImageResource(R.drawable.face1)
 
         userViewModel.observableUser.observe(viewLifecycleOwner) {
 
@@ -64,15 +64,15 @@ class HomeFragment : Fragment()
             binding.profileDescription.text = it?.description
             binding.profileFollowers.text = it?.followers.toString()
             binding.profileFollowing.text = it?.following.toString()
-            binding.profileImage.setImageResource(R.drawable.face3)
+
+
+            binding.profileImage.setImageResource(it?.photoID ?: R.drawable.face1)
         }
 
         postViewModel.observablePosts.observe(viewLifecycleOwner) {
             adapter.posts = it
             adapter.notifyDataSetChanged()
         }
-
-
 
 
         return binding.root

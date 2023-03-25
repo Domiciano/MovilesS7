@@ -19,8 +19,9 @@ class UserRepository {
         if (user.description != "") {
             currentUser?.description = user.description
         }
-
-
+        if (user.photoID != 0) {
+            currentUser?.photoID = user.photoID
+        }
 
 
 
