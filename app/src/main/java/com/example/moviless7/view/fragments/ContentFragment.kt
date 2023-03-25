@@ -8,35 +8,37 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.moviless7.R
 import com.example.moviless7.databinding.FragmentContentBinding
 import com.example.moviless7.model.Post
 
 import com.example.moviless7.model.User
+import com.example.moviless7.viewmodel.PostViewModel
+import com.example.moviless7.viewmodel.UserViewModel
 
 
 class ContentFragment : Fragment() {
 
+    private lateinit var binding: FragmentContentBinding
 
-    //Observers
-    var listener: OnUserDataChangedListener? = null
-    var listenerPost : OnPostAddedListener? = null
 
     //Views
     private val profileButtons = ArrayList<ImageButton>();
-    private lateinit var binding: FragmentContentBinding
 
     //STATE
-    var photoID: Int = 0
+    private var photoID: Int = 0
+
+    //View Models
+    private val userViewModel: UserViewModel by activityViewModels()
+    private val postViewModel: PostViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = FragmentContentBinding.inflate(inflater, container, false)
-        val root = binding.root
 
         //Referenciar views
         profileButtons.add(binding.profilePhotoBtn1)
@@ -55,12 +57,11 @@ class ContentFragment : Fragment() {
         binding.publishBtn.setOnClickListener {
             val comment = binding.commentET.text.toString()
             val post = Post(comment)
-            listenerPost?.let {
-                it.onPostAdded(post)
-            }
+            postViewModel.addPost(post)
+
         }
 
-        return root
+        return binding.root
     }
 
     fun onClick(v: View) {
@@ -87,21 +88,11 @@ class ContentFragment : Fragment() {
                 val carrer = binding.careerET.text.toString()
                 val description = binding.descriptionET.text.toString()
                 val user = User(name, carrer, 0, 0, description, photoID)
-                listener?.let {
-                    it.onUserDataChanged(user)
-                }
-
+                userViewModel.updateUser(user)
             }
         }
     }
 
-    interface OnUserDataChangedListener {
-        fun onUserDataChanged(user: User)
-    }
-
-    interface OnPostAddedListener {
-        fun onPostAdded(post: Post)
-    }
 
     companion object {
         fun newInstance(): ContentFragment {

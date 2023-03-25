@@ -1,61 +1,81 @@
 package com.example.moviless7.view.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviless7.R
+import com.example.moviless7.databinding.FragmentHomeBinding
 import com.example.moviless7.model.Post
 import com.example.moviless7.view.MainActivity
 import com.example.moviless7.view.lists.PostAdapter
 import com.example.moviless7.model.User
+import com.example.moviless7.viewmodel.PostViewModel
+import com.example.moviless7.viewmodel.UserViewModel
 
 
-class HomeFragment : Fragment(), ContentFragment.OnUserDataChangedListener,
-    ContentFragment.OnPostAddedListener {
+class HomeFragment : Fragment()
+     {
 
-    private lateinit var profileImage: ImageView
-    private lateinit var profileName: TextView
-    private lateinit var profileCareer: TextView
-    private lateinit var profileDescription: TextView
-    private lateinit var profilePostsRV: RecyclerView
+    private lateinit var binding: FragmentHomeBinding
 
     //STATE
-    var user = User("Andres Andrade","Ingeniero Telemático", 123, 1823, "Lorem Ipsum", R.drawable.face1)
-    private var adapter = PostAdapter()
+    private var user: User? = null
+    private val adapter = PostAdapter()
 
+    //View Models
+    private val userViewModel: UserViewModel by activityViewModels()
+    private val postViewModel: PostViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val root: View = inflater.inflate(R.layout.fragment_home, container, false)
-        profileImage = root.findViewById(R.id.profileImage)
-        profileName = root.findViewById(R.id.profileName)
-        profileCareer = root.findViewById(R.id.profileCareer)
 
-        profilePostsRV = root.findViewById(R.id.profilePostsRV)
-        //Poblar el estado de la lista
-        profilePostsRV.adapter = adapter
-        profilePostsRV.layoutManager = LinearLayoutManager(context)
-        profilePostsRV.setHasFixedSize(false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        profileDescription = root.findViewById(R.id.profileDescription)
+        this.user = userViewModel.observableUser.value
 
-        //Poblar el estado
+        //RecyclerView
+        binding.profilePostsRV.adapter = adapter
+        binding.profilePostsRV.layoutManager = LinearLayoutManager(activity)
+        binding.profilePostsRV.setHasFixedSize(true)
 
-        profileName.text = user.name
-        profileCareer.text = user.career
-        profileDescription.text = user.description
-        profileImage.setImageResource(user.photoID)
+        binding.profileName.text = user?.name
+        binding.profileCareer.text = user?.career
+        binding.profileDescription.text = user?.description
+        binding.profileFollowers.text = user?.followers.toString()
+        binding.profileFollowing.text = user?.following.toString()
+        binding.profileImage.setImageResource(R.drawable.face3)
+
+        userViewModel.observableUser.observe(viewLifecycleOwner) {
+
+            binding.profileName.text = it?.name
+            binding.profileCareer.text = it?.career
+            binding.profileDescription.text = it?.description
+            binding.profileFollowers.text = it?.followers.toString()
+            binding.profileFollowing.text = it?.following.toString()
+            binding.profileImage.setImageResource(R.drawable.face3)
+        }
+
+        postViewModel.observablePosts.observe(viewLifecycleOwner) {
+            adapter.posts = it
+            adapter.notifyDataSetChanged()
+        }
 
 
-        val myactivity = activity as MainActivity
 
 
-        return root
+        return binding.root
     }
 
     companion object {
@@ -64,14 +84,5 @@ class HomeFragment : Fragment(), ContentFragment.OnUserDataChangedListener,
         }
     }
 
-    override fun onUserDataChanged(user: User) {
-        //NUNCA !!!!!!!! Usar la UI
-        this.user = user
 
-    }
-
-    override fun onPostAdded(post: Post) {
-        //!!NADA DE UI
-        this.adapter.posts.add(post)
-    }
 }

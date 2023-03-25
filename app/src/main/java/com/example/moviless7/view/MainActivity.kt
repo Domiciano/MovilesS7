@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.example.moviless7.R
+import com.example.moviless7.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.moviless7.view.fragments.ConfigFragment
 import com.example.moviless7.view.fragments.ContentFragment
@@ -17,38 +18,27 @@ import com.example.moviless7.view.fragments.HomeFragment
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var container: ConstraintLayout
-    private lateinit var navigator: BottomNavigationView
-    private lateinit var toolbar: Toolbar
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+
 
     //Fragments
-    private lateinit var homeFragment: HomeFragment
-    private lateinit var contentFragment: ContentFragment
-    private lateinit var configFragment: ConfigFragment
+    private  val homeFragment: HomeFragment= HomeFragment.newInstance()
+    private  val contentFragment: ContentFragment= ContentFragment.newInstance()
+    private  val configFragment: ConfigFragment= ConfigFragment.newInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
-        //Referenciar
-        toolbar = findViewById(R.id.toolbar)
-        container = findViewById(R.id.container)
-        navigator = findViewById(R.id.navigator)
-
-        homeFragment = HomeFragment.newInstance()
-        contentFragment = ContentFragment.newInstance()
-        configFragment = ConfigFragment.newInstance()
-
-        //Relaciones
-        contentFragment.listener = homeFragment
-        contentFragment.listenerPost = homeFragment
 
         //Configurar la barra superior
-        toolbar.setTitleTextColor(Color.WHITE)
-        setSupportActionBar(toolbar)
+        binding.toolbar.setTitleTextColor(Color.WHITE)
+        setSupportActionBar(binding.toolbar)
 
         //Acción del bottom nav bar
-        navigator.setOnItemSelectedListener { option: MenuItem ->
+        binding.navigator.setOnItemSelectedListener { option: MenuItem ->
             when (option.itemId) {
                 R.id.home -> showFragment(homeFragment)
                 R.id.content -> showFragment(contentFragment)
@@ -61,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         showFragment(homeFragment)
     }
 
-    fun showFragment(fragment: Fragment?) {
+    private fun showFragment(fragment: Fragment?) {
         val manager = supportFragmentManager
         val transaction = manager.beginTransaction()
         transaction.replace(R.id.container, fragment!!)
