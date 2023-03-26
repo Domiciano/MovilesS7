@@ -7,12 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.moviless7.R
 import com.example.moviless7.databinding.FragmentContentBinding
 import com.example.moviless7.model.Post
-
 import com.example.moviless7.model.User
 import com.example.moviless7.viewmodel.PostViewModel
 import com.example.moviless7.viewmodel.UserViewModel
@@ -22,9 +22,8 @@ class ContentFragment : Fragment() {
 
     private lateinit var binding: FragmentContentBinding
 
-
     //Views
-    private val profileButtons = ArrayList<ImageButton>();
+    private val profileButtons = ArrayList<ImageButton>()
 
     //STATE
     private var photoID: Int = 0
@@ -47,7 +46,6 @@ class ContentFragment : Fragment() {
         profileButtons.add(binding.profilePhotoBtn4)
 
 
-
         profileButtons.forEach { it.setOnClickListener(::onClick) }
 
         binding.editInfoBtn.setOnClickListener(::onClick)
@@ -59,47 +57,51 @@ class ContentFragment : Fragment() {
             val post = Post(comment)
             postViewModel.addPost(post)
 
+            Toast.makeText(activity, "Post published", Toast.LENGTH_SHORT).show()
+
+            //Clear fields
+            binding.commentET.text.clear()
+
         }
 
         return binding.root
     }
 
-    fun onClick(v: View) {
-        //La variable v que recibe este método es el view al que se le hace click
+    private fun onClick(v: View) {
 
         profileButtons.forEach { it.setBackgroundColor(Color.BLACK) }
         v.setBackgroundColor(Color.rgb(83, 66, 210))
 
         when (v.id) {
-            R.id.profilePhotoBtn1 -> {
-                photoID = R.drawable.face1
-            }
-            R.id.profilePhotoBtn2 -> {
-                photoID = R.drawable.face2
-            }
-            R.id.profilePhotoBtn3 -> {
-                photoID = R.drawable.face3
-            }
-            R.id.profilePhotoBtn4 -> {
-                photoID = R.drawable.face4
-            }
-            R.id.editInfoBtn -> {
+
+            binding.profilePhotoBtn1.id -> photoID = R.drawable.face1
+
+            binding.profilePhotoBtn2.id -> photoID = R.drawable.face2
+
+            binding.profilePhotoBtn3.id -> photoID = R.drawable.face3
+
+            binding.profilePhotoBtn4.id -> photoID = R.drawable.face4
+
+
+            binding.editInfoBtn.id -> {
                 val name = binding.nameET.text.toString()
                 val carrer = binding.careerET.text.toString()
                 val description = binding.descriptionET.text.toString()
                 val user = User(name, carrer, 0, 0, description, photoID)
                 userViewModel.updateUser(user)
+
+                //Clear fields
+                binding.nameET.text.clear()
+                binding.careerET.text.clear()
+                binding.descriptionET.text.clear()
+
             }
         }
+        Toast.makeText(activity, "User updated", Toast.LENGTH_SHORT).show()
     }
 
 
     companion object {
-        fun newInstance(): ContentFragment {
-            val fragment = ContentFragment()
-            val args = Bundle()
-            fragment.arguments = args
-            return fragment
-        }
+        fun newInstance() = ContentFragment()
     }
 }

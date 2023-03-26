@@ -1,33 +1,21 @@
 package com.example.moviless7.view.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.moviless7.R
 import com.example.moviless7.databinding.FragmentHomeBinding
-import com.example.moviless7.model.Post
-import com.example.moviless7.view.MainActivity
 import com.example.moviless7.view.lists.PostAdapter
 import com.example.moviless7.model.User
 import com.example.moviless7.viewmodel.PostViewModel
 import com.example.moviless7.viewmodel.UserViewModel
 
 
-class HomeFragment : Fragment()
-     {
+class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -39,7 +27,9 @@ class HomeFragment : Fragment()
     private val userViewModel: UserViewModel by activityViewModels()
     private val postViewModel: PostViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
@@ -64,14 +54,13 @@ class HomeFragment : Fragment()
             binding.profileDescription.text = it?.description
             binding.profileFollowers.text = it?.followers.toString()
             binding.profileFollowing.text = it?.following.toString()
-
-
             binding.profileImage.setImageResource(it?.photoID ?: R.drawable.face1)
+
         }
 
         postViewModel.observablePosts.observe(viewLifecycleOwner) {
             adapter.posts = it
-            adapter.notifyDataSetChanged()
+            adapter.notifyItemInserted(it.size - 1)
         }
 
 
@@ -79,9 +68,7 @@ class HomeFragment : Fragment()
     }
 
     companion object {
-        fun newInstance(): HomeFragment {
-            return HomeFragment()
-        }
+        fun newInstance() = HomeFragment()
     }
 
 

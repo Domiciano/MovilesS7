@@ -5,19 +5,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.example.moviless7.R
 import com.example.moviless7.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.moviless7.view.fragments.ConfigFragment
 import com.example.moviless7.view.fragments.ContentFragment
 import com.example.moviless7.view.fragments.HomeFragment
 import com.example.moviless7.viewmodel.ConfigViewModel
-import com.example.moviless7.viewmodel.UserViewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,14 +20,12 @@ class MainActivity : AppCompatActivity() {
 
 
     //Fragments
-    private  val homeFragment: HomeFragment= HomeFragment.newInstance()
-    private  val contentFragment: ContentFragment= ContentFragment.newInstance()
-    private  val configFragment: ConfigFragment= ConfigFragment.newInstance()
+    private val homeFragment: HomeFragment = HomeFragment.newInstance()
+    private val contentFragment: ContentFragment = ContentFragment.newInstance()
+    private val configFragment: ConfigFragment = ConfigFragment.newInstance()
 
     //Views model
-
     private val configViewModel: ConfigViewModel by viewModels()
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,4 +69,5 @@ class MainActivity : AppCompatActivity() {
         transaction.replace(R.id.container, fragment!!)
         transaction.commit()
     }
+
 }

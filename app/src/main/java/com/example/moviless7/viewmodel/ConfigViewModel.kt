@@ -9,7 +9,7 @@ class ConfigViewModel:ViewModel() {
 
     private val configRepository = ConfigRepository()
 
-    val config = configRepository.currentConfig
+    private val config = configRepository.currentConfig
     val observableConfig = MutableLiveData(config)
 
     fun updateConfig(config: Config) {

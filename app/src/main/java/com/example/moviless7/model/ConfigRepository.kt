@@ -7,15 +7,14 @@ class ConfigRepository {
     var currentConfig: Config? = Config(Color.BLUE, Color.WHITE)
 
     fun updateConfig(config: Config) {
-        if (config.mainColor != null) {
-            currentConfig?.mainColor = config.mainColor
+
+        config.mainColor?.let {
+            currentConfig?.mainColor = it
         }
-        if (config.backColor != null) {
-            currentConfig?.backColor = config.backColor
+
+        config.backColor?.let {
+            currentConfig?.backColor = it
         }
     }
 
-    fun deleteConfig() {
-        currentConfig = null
-    }
 }
