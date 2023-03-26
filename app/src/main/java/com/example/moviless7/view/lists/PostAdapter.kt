@@ -12,8 +12,6 @@ class PostAdapter : RecyclerView.Adapter<PostVH>() {
     var posts = ArrayList<Post>()
 
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostVH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.postrow, parent, false)
         return PostVH(view)
